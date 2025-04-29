@@ -1,0 +1,8 @@
+require("prototypes.entity")
+require("prototypes.item")
+require("prototypes.recipe")
+require("prototypes.technology")
+require("prototypes.planet.dune")
+require("prototypes.pollution")
+require("prototypes.autoplace-controls")
+require("prototypes.tile.tiles")

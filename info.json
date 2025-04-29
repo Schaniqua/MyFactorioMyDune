@@ -1,0 +1,12 @@
+{
+  "name": "MyFactorioMyDune",
+  "version": "0.1.0",
+  "title": "My Factorio my dune",
+  "author": "MathLight",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "base",
+    "space-age"
+  ],
+  "description": "Factory must grow so the spice can flow."
+}

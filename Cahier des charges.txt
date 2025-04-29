@@ -1,0 +1,120 @@
+-- Fonction pour ralentir progressivement le joueur
+-- Fonction pour gérer le sable
+-- Fonction pour faire trembler l'écran
+-- Fonction pour gérer l'apparition du ver
+
+une grenade est lancé, à l'endroit d'impact ("EI") le jeu scanne si il trouve un joueur dans une zone : searchRadius, si il ne trouve pas de joueur il fait apparaitre le ver à l'EI après un délais wormStrikeDelay. 
+Si le jeu trouve un joueur dans le searchRadius, il sauvegarde qui est ce joueur en local, il le ralenti progressivement jusqu'à 95% et après le délais wormStrikeDelay, 
+il fait apparaitre le ver a l'emplacement du joueur enregistré en local si ce joueur existe toujours (si il n'est pas monté dans un véhicule ou mort). 
+
+ - Fonction apparition du ver : Les 2 animations qui se suivent, ScreenShake, sauvegarde les types de tuile dans le rayon d'apparition du ver, les remplaces par du sable, 
+inflige des dégats : wormDamage à toutes les entité dans la zone d'action : wormSize, après un délais, replaces les tuiles de sol original, une par une à leurs place de manière aléatoire.
+
+
+
+
+
+
+
+
+
+
+
+
+ - Focntion ScreenShake : Au moment de l'apparition du ver, 3 étapes, 3 intensités de shake (shakeForce1, shakeForce2 et shakeForce3) et 2 rayons : shakeRadius1 et shakeRadius2. Scanne les joueurs dans un rayon autour de l'épicentre. 
+
+étape 1 : Joueurs présents entre l'épicentre et shakeRadius1 : appliquer shakeForce1
+Pour les joueurs présents entre shakeRadius1 et 2 : ne rien appliquer
+étape 2 : Joueurs présents entre l'épicentre et shakeRadius1 : appliquer shakeForce2
+Pour les joueurs présents entre shakeRadius1 et 2 : appliquer shakeForce1
+étape 3 : Joueurs présents entre l'épicentre et shakeRadius1 : appliquer shakeForce3
+Pour les joueurs présents entre shakeRadius1 et 2 : appliquer shakeForce2
+
+
+
+Fonction : WormSummon
+Paramètres de la fonction :
+
+    wormSize : Taille du ver et de sa zone d'impact (rayon en tiles).
+    wormDamage : Dégâts totaux infligés par le ver aux entités (suivant une courbe exponentielle).
+    wormStrikeDelay : Délai avant l'apparition du ver (en ticks).
+    searchRadius : Rayon dans lequel le jeu cherche un joueur autour de l'impact.
+    wormDamageDuration : Durée pendant laquelle les dégâts sont infligés progressivement.
+    restaurationDelay : Délai avant la restauration des tuiles initiales.
+    impactPosition : Position où la grenade touche le sol (obligatoire).
+    vegetationDamageFactor : Facteur d'accélération des dégâts pour la végétation (instantie ou presque).
+
+Résumé du comportement de la fonction :
+
+    Impact de la grenade et recherche de joueur :
+        Lorsqu'une grenade est lancée et touche le sol à une position donnée (impactPosition), la fonction WormSummon est appelée.
+        La fonction recherche un joueur dans un rayon défini autour de l'impact (searchRadius).
+        Si un joueur est trouvé dans ce rayon, il est enregistré localement, et sa vitesse de course est réduite progressivement jusqu'à atteindre 95 % pendant le second tiers de wormStrikeDelay. Si le joueur meurt ou monte dans un véhicule avant que le ver n'apparaisse, le ver apparaîtra à l'endroit de l'impact initial (EI).
+        Si aucun joueur n'est trouvé, le ver apparaîtra à l'endroit de l'impact initial (impactPosition) après le wormStrikeDelay.
+
+    Apparition du ver et application du sable :
+        Lorsque le ver apparaît, il joue deux animations enchaînées (adaptées à la taille du ver définie par wormSize).
+        Sous le ver, toutes les tuiles dans la zone définie par wormSize sont remplacées par du sable.
+        Les tuiles d'origine sont sauvegardées afin d'être restaurées après un délai.
+
+    Secousses d'écran (ScreenShake) :
+        Les secousses d'écran sont appliquées à trois étapes différentes après l'apparition du ver, en fonction de la distance des joueurs par rapport au ver :
+            Les intensités des secousses (shakeForce1, shakeForce2, shakeForce3) et les rayons (shakeRadius1, shakeRadius2) sont calculés automatiquement en fonction de la taille du ver (wormSize).
+            Étape 1 : Les joueurs dans un rayon proche du ver (shakeRadius1) subissent une secousse d'intensité shakeForce1, ceux dans un rayon plus éloigné (shakeRadius2) ne ressentent rien.
+            Étape 2 : Les joueurs dans shakeRadius1 subissent une secousse d'intensité shakeForce2, tandis que ceux dans shakeRadius2 subissent shakeForce1.
+            Étape 3 : Les joueurs dans shakeRadius1 subissent une secousse d'intensité shakeForce3, tandis que ceux dans shakeRadius2 subissent shakeForce2.
+
+    Infliger des dégâts :
+        Les dégâts sont infligés progressivement sur la durée wormDamageDuration suivant une courbe exponentielle (dégâts lents au début, puis de plus en plus rapides).
+        Végétation détruite presque instantanément : Les entités de type végétation subissent des dégâts quasi instantanés grâce au facteur d'accélération vegetationDamageFactor.
+        Dégâts à tout : Tous les types d'entités (structures, arbres, ennemis, etc.) subissent des dégâts, sans exception.
+
+    Restauration des tuiles :
+        Après le restaurationDelay, les tuiles sous le ver (sauvegardées avant l'application du sable) sont restaurées une par une de manière aléatoire. Cela signifie que chaque tuile reprend son état d'origine dans un ordre aléatoire, sans synchronisation.
+
+    Personnalisation dynamique des secousses et des dégâts :
+        Les intensités des secousses et les rayons sont automatiquement proportionnels à la taille du ver. Plus le ver est grand, plus les secousses sont fortes et plus les rayons sont larges.
+        La fonction WormSummon est conçue pour être réutilisée dans d'autres contextes avec des paramètres personnalisés (taille du ver, dégâts, durée, etc.).
+
+
+
+
+
+
+
+J'aimerais créer un mod Dune pour Factorio, pour l'instant j'aimerais ajouter 2 choses, une grosse fonction qui permettrais de faire apparaitre un ver des sables qui détruirait tout sur son passage. 
+J'aimerais pourvoir appeler cette fonction et pouvoir choisir la taille du ver. Ensuite j'aimerais ajouter l'item worm_grenade qui permettrais une fois lancé de faire apparaitre ce ver a l'endroit de l'impact. 
+Je vais te donner la structure que j'aimerais du mod et je te donnerais aussi un exemple de structure de quelques fonction dans le fichier control.lua :
+
+wormGrenade_0.1.0/
+--control.lua
+--data.lua
+--prototypes/
+-- --item.lua
+-- --entity.lua
+-- --recipe.lua
+-- --technology.lua
+--graphics/
+-- --entity/
+-- -- --worm_grenade.png (icon de la grenade)
+-- --animation/
+-- -- --worm_grenade.png (animation de la grande dans les airs)
+-- -- --worm-preparing1.png (animation de l'attaque du ver part1)
+-- -- --worm-preparing2.png (animation de l'attaque du ver part2)
+
+voila pour l'organisation des fichiers du mod.
+genere moi pour chaque fichier .lua leurs contenu
+
+Pour les exemples de fonctions : 
+
+function grenade
+-- fonction qui détecte quand une wormgrenade touche le sol et récupere le point d'impact, ensuite appelle la fonction wormSummon(15,10,60,20,120,300)
+
+function playAnim(animation_name, position, scale)
+-- fonction qui joue l'animation demandé
+
+function wormSummon(wormSize, wormDamage, wormStrikeDelay, searchRadius, wormDamageDuration, restoration_duration, startPosition)
+-- avec wormSize qui permet de définir la zone circulaire ou vont être appliqué les dégâts, wormDamage les dégats totaux dans la zone que vont subir les entités, 
+wormStrikeDelay le temps que va mettre le ver a attaquer, searchRadius la taille de la zone ou va chercher un joueur pour apparaitre sous ses pieds si il trouve un joueur, 
+wormDamageDuration la durée pendant laquel les dégats de wormDamage vont etre appliqué tout les ticks, restaurationDuration qui definie la durée avant laquelle les tuiles du 
+terrain original qui ont été remplacé par du sable de manière circulaire a la fin de wormStrikeDelay vont etre replacé, startPosition l'endroit ou tout démarre.
