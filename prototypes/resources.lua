@@ -7,7 +7,7 @@ local function resource(resource_parameters, autoplace_parameters)
     {
       type = "resource",
       name = resource_parameters.name,
-      icon = "__space-age__/graphics/icons/" .. resource_parameters.name .. ".png",
+      icon = "__MyFactorioMyDune__/graphics/icons/" .. resource_parameters.name .. ".png",
       flags = {"placeable-neutral"},
       order="a-b-"..resource_parameters.order,
       tree_removal_probability = 0.8,
@@ -49,7 +49,7 @@ local function resource(resource_parameters, autoplace_parameters)
       {
         sheet =
         {
-          filename = "__space-age__/graphics/entity/" .. resource_parameters.name .. "/" .. resource_parameters.name .. ".png",
+          filename = "__MyFactorioMyDune__/graphics/entity/" .. resource_parameters.name .. "/" .. resource_parameters.name .. ".png",
           priority = "extra-high",
           size = 128,
           frame_count = 8,
@@ -83,5 +83,6 @@ data:extend({
     {
       probability_expression = 0
     }
-  ),
+
+  )
 })

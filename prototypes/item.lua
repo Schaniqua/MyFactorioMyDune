@@ -98,10 +98,9 @@ data:extend({
         type = "item",
         name = "spice-ore",
         stack_size = 100,
-        icon = "__MyFactorioMyDune__/graphics/icons/poorSpice.png",
+        icon = "__MyFactorioMyDune__/graphics/icons/spice-ore.png",
 		icon_size = 64,
         subgroup = "raw-resource",
-        stack_size = 50,
         weight = 2 * kg
     },
 	{
