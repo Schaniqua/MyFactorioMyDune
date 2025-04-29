@@ -21,11 +21,12 @@ data:extend({
     volume = 10,
     base_level = 1,
     pipe_covers = pipecoverspictures(),
+
     pipe_connections = {
       { position = {0, -1},
-		type = "output",
-		flow_direction = "output"
-	  }
+		    flow_direction = "output",
+        direction = defines.direction.south
+	    }
     },
     production_type = "output"
   },
@@ -51,7 +52,7 @@ data:extend({
         collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
         selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 
-        crafting_categories = {"space-fluid-assembling"},
+        crafting_categories = {"organic"},
         crafting_speed = 1.0,
 
         energy_source = {
